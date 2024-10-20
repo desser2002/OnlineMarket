@@ -10,29 +10,30 @@ interface TextButtonProps {
     textColor?: string; // Цвет текста кнопки
 }
 
-const Button: React.FC<TextButtonProps> = ({
-                                           text,
-                                           leftIcon,
-                                           rightIcon,
-                                           onClick,
-                                           className = '',
-                                           textColor = 'text-gray-900', // Цвет текста по умолчанию
-                                       }) => {
+const TextButton: React.FC<TextButtonProps> = ({
+                                                   text,
+                                                   leftIcon,
+                                                   rightIcon,
+                                                   onClick,
+                                                   className = '',
+                                                   textColor = 'text-gray-900', // Цвет текста по умолчанию
+                                               }) => {
     return (
         <button
             type="button"
-            className="inline-flex items-center text-sm font-medium ${textColor} hover:underline dark:text-red-500"  onClick={onClick}
+            className={`inline-flex items-center text-sm font-medium ${textColor} hover:underline ${className}`}
+            onClick={onClick}
         >
             {/* Условно рендерим иконку слева, если она есть */}
-            {leftIcon && <span className="-ml-0.5 mr-2 h-4 w-4">{leftIcon}</span>}
+            {leftIcon && <span className="mr-1.5 h-5 w-5">{leftIcon}</span>}
 
-            {/* Текст всегда по центру */}
-            <span className="text-center">{text}</span>
+            {/* Текст кнопки */}
+            {text}
 
             {/* Условно рендерим иконку справа, если она есть */}
-            {rightIcon && <span className="ml-2 h-4 w-4">{rightIcon}</span>}
+            {rightIcon && <span className="ml-2 h-5 w-5">{rightIcon}</span>}
         </button>
     );
 };
 
-export default Button;
+export default TextButton;

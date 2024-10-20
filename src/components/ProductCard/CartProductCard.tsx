@@ -1,5 +1,6 @@
 import React from 'react';
 import { Product } from "@/types/Product";
+import TextButton from "@/components/Buttons/textButton";
 
 interface CartProductCardProps {
     product: Product;
@@ -59,17 +60,16 @@ const CartProductCard: React.FC<CartProductCardProps> = ({ product }) => {
                             </a>
                             <div className="flex items-center gap-4">
 
-                                <button type="button"
-                                        className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
-                                    <svg className="mr-1.5 h-5 w-5" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round"
-                                              strokeLinejoin="round" strokeWidth="2"
-                                              d="M6 18 17.94 6M18 18 6.06 6" />
-                                    </svg>
-                                    Remove
-                                </button>
+                                <TextButton
+                                    text="Remove"
+                                    textColor="text-red-600"  // Указываем цвет текста
+                                    leftIcon={
+                                        <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18 17.94 6M18 18 6.06 6" />
+                                        </svg>
+                                    }
+                                    onClick={() => console.log('Remove clicked')}
+                                />
                             </div>
                         </div>
                     </div>
