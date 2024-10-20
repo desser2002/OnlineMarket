@@ -16,7 +16,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ paths }) => {
                                 <li key={index} className="inline-flex items-center">
                                     {!isLast ? (
                                         <a
-                                            href="#"
+                                            href={path}
                                             className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white"
                                         >
                                             {index === 0 && (

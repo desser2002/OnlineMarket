@@ -21,7 +21,7 @@ const products: Product[] = [
         rating: 5,
         reviewCount: 455,
         imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg',
-        discount: 'Up to 35% off',
+        discount: '15 dollarov',
     },
     {
         id: 2,
@@ -31,6 +31,15 @@ const products: Product[] = [
         reviewCount: 300,
         discount: 'Up to 35% off',
         imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/e-commerce/zenbook.svg',
+    },
+    {
+        id: 3,
+        name: 'Apple iMac 27", 1TB HDD, Retina 5K Display, M3 Max',
+        price: 1699,
+        rating: 5,
+        reviewCount: 455,
+        imageUrl: 'https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg',
+        discount: 'Up to 35% off',
     },
 
 ];
