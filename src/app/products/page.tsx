@@ -5,9 +5,9 @@ import {Product} from "@/types/Product";
 import ProductCardList from "@/components/ProductCard/ProductCardList";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Buttons/Button";
-import FilterIcon from "@/icons/FilterIcon";
-import ChevronDownIcon from "@/icons/ChevronDownIcon";
-import SortIcon from "@/icons/SortIcon";
+import FilterIcon from "@/components/icons/FilterIcon";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import SortIcon from "@/components/icons/SortIcon";
 import SortDropdown from "@/components/DropDowns/SortDropDown";
 import FilterModal from "@/components/Modal/FilterModal";
 
