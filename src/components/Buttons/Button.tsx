@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps {
-    text: string;
+    text?: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     onClick?: () => void;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from "@/components/Buttons/Button";
-import {blue} from "next/dist/lib/picocolors";
 
 interface FilterModalProps {
     isVisible: boolean;
@@ -9,6 +8,23 @@ interface FilterModalProps {
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({ isVisible, onClose, brands }) => {
+    // Состояние для выбранных брендов
+    const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+
+    // Функция для переключения состояния чекбокса
+    const handleCheckboxChange = (brand: string) => {
+        if (selectedBrands.includes(brand)) {
+            setSelectedBrands(selectedBrands.filter((b) => b !== brand));
+        } else {
+            setSelectedBrands([...selectedBrands, brand]);
+        }
+    };
+
+    // Функция для сброса фильтров (чекбоксов)
+    const resetFilters = () => {
+        setSelectedBrands([]);
+    };
+
     const [activeTab, setActiveTab] = useState<string>('brand'); // Состояние для текущей активной вкладки
 
     return (
@@ -105,6 +121,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isVisible, onClose, brands })
                                             id={`brand-${brand}`}
                                             type="checkbox"
                                             value={brand}
+                                            checked={selectedBrands.includes(brand)} // Отмечаем, если бренд выбран
+                                            onChange={() => handleCheckboxChange(brand)} // Изменение состояния при клике
                                             className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600"
                                         />
                                         <label
@@ -121,11 +139,14 @@ const FilterModal: React.FC<FilterModalProps> = ({ isVisible, onClose, brands })
                         {activeTab === 'advanced' && <div>Advanced Filters Content</div>}
                     </div>
                 </div>
+
+                {/* Кнопка Reset с функциональностью сброса */}
                 <Button
                     text="Reset"
-                    className="mt-4"
-                    backgroundColor="bg-primary-700"  // Указываем синий фон
-                    textColor="text-gray-50"      // Указываем серый текст
+                    className="mt-4 ml-4"
+                    backgroundColor="bg-primary-700"
+                    textColor="text-gray-50"
+                    onClick={resetFilters} // Сбрасываем фильтры при клике
                 />
             </form>
         </div>

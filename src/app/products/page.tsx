@@ -59,28 +59,29 @@ export default function Page() {
 
                         <div className="flex items-center space-x-4">
 
-                                {/* Кнопка для открытия модального окна */}
-                                <Button
-                                    className="filterButton"
-                                    text="Filters"
-                                    leftIcon={<FilterIcon/>}
-                                    rightIcon={<ChevronDownIcon/>}
-                                    onClick={toggleModal}
-                                />
+                            {/* Кнопка для открытия модального окна */}
+                            <Button
+                                className="filterButton"
+                                text="Filters"
+                                leftIcon={<FilterIcon/>}
+                                rightIcon={<ChevronDownIcon/>}
+                                onClick={toggleModal}
+                            />
 
-                                {/* Модальное окно для фильтров, передаем список брендов */}
-                                <FilterModal isVisible={isModalVisible} onClose={toggleModal} brands={brands}/>
+                            {/* Модальное окно для фильтров, передаем список брендов */}
+                            <FilterModal isVisible={isModalVisible} onClose={toggleModal} brands={brands}/>
 
+                            <div className="relative inline-block">
+                                <Button className={"sortButton"} text={"Sort"} rightIcon={<ChevronDownIcon/>}
+                                        leftIcon={<SortIcon/>}
+                                        onClick={toggleSortDropdown}/>
+                                <SortDropdown isVisible={isSortDropdownVisible}/>
 
-                            <Button className={"sortButton"} text={"Sort"} rightIcon={<ChevronDownIcon/>}
-                                    leftIcon={<SortIcon/>}
-                                    onClick={toggleSortDropdown}/>
-                            <SortDropdown isVisible={isSortDropdownVisible}/>
-
+                            </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
+                        <div>
                         <ProductCardList products={products}/>
                     </div>
                     <div className="flex justify-center mt-2.5">

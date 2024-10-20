@@ -8,8 +8,7 @@ const SortDropdown: React.FC<DropdownProps> = ({ isVisible }) => {
     return (
         <div
             id="dropdownSort1"
-            className={`z-50 ${isVisible ? '' : 'hidden'} w-40 divide-y divide-gray-900 rounded-lg bg-white shadow dark:bg-gray-900`}
-            data-popper-placement="bottom"
+            className={`absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50 ${isVisible ? '' : 'hidden'} w-40 divide-y divide-gray-900 rounded-lg bg-white shadow dark:bg-gray-900`}
         >
             <ul
                 className="p-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
