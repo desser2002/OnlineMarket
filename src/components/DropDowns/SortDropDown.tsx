@@ -4,7 +4,7 @@ interface DropdownProps {
     isVisible: boolean;  // Флаг видимости выпадающего списка
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ isVisible }) => {
+const SortDropdown: React.FC<DropdownProps> = ({ isVisible }) => {
     return (
         <div
             id="dropdownSort1"
@@ -68,4 +68,4 @@ const Dropdown: React.FC<DropdownProps> = ({ isVisible }) => {
     );
 };
 
-export default Dropdown;
+export default SortDropdown;

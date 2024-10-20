@@ -7,6 +7,7 @@ export default function Home() {
     // Check if dark mode is already set in localStorage
     const isDarkModeSet = localStorage.getItem("theme") === "dark";
 
+
     // Set dark mode class on first load or if already set in localStorage
     if (!isDarkModeSet) {
       document.documentElement.classList.add("dark");

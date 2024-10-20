@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Dropdown from "@/components/DropDowns/SortDropDown";
 import {Product} from "@/types/Product";
 import ProductCardList from "@/components/ProductCard/ProductCardList";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -9,7 +8,10 @@ import Button from "@/components/Buttons/Button";
 import FilterIcon from "@/icons/FilterIcon";
 import ChevronDownIcon from "@/icons/ChevronDownIcon";
 import SortIcon from "@/icons/SortIcon";
+import SortDropdown from "@/components/DropDowns/SortDropDown";
+import FilterModal from "@/components/Modal/FilterModal";
 
+const brands = ['Apple', 'Asus', 'Acer', 'Allview', 'Atari', 'AMD', 'Aruba', 'Beats'];
 
 const products: Product[] = [
     {
@@ -34,12 +36,17 @@ const products: Product[] = [
 ];
 
 export default function Page() {
-    const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const [isSortDropdownVisible, setSortDropdownVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const toggleDropdown = () => {
-        setDropdownVisible(!isDropdownVisible);
+    const toggleSortDropdown = () => {
+        setSortDropdownVisible(!isSortDropdownVisible);
     };
 
+    // Функция для открытия/закрытия модального окна
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
     const breadcrumbPaths = ['Home', 'Products', 'Electronics'];
     return (
         <div>
@@ -51,16 +58,24 @@ export default function Page() {
 
 
                         <div className="flex items-center space-x-4">
-                            <Button
-                                className={"filterButton"}
-                                text="Filters"
-                                leftIcon={<FilterIcon/>}
-                                rightIcon={<ChevronDownIcon/>}
-                            />
 
-                            <Button text={"Sort"} rightIcon={<ChevronDownIcon/>} leftIcon={<SortIcon/>}
-                                    onClick={toggleDropdown}/>
-                            <Dropdown isVisible={isDropdownVisible}/>
+                                {/* Кнопка для открытия модального окна */}
+                                <Button
+                                    className="filterButton"
+                                    text="Filters"
+                                    leftIcon={<FilterIcon/>}
+                                    rightIcon={<ChevronDownIcon/>}
+                                    onClick={toggleModal}
+                                />
+
+                                {/* Модальное окно для фильтров, передаем список брендов */}
+                                <FilterModal isVisible={isModalVisible} onClose={toggleModal} brands={brands}/>
+
+
+                            <Button className={"sortButton"} text={"Sort"} rightIcon={<ChevronDownIcon/>}
+                                    leftIcon={<SortIcon/>}
+                                    onClick={toggleSortDropdown}/>
+                            <SortDropdown isVisible={isSortDropdownVisible}/>
 
                         </div>
                     </div>
@@ -68,7 +83,7 @@ export default function Page() {
                     <div>
                         <ProductCardList products={products}/>
                     </div>
-                    <div className="flex justify-center mt-2.5"> {/* Центрирование и отступ */}
+                    <div className="flex justify-center mt-2.5">
                         <Button text="Show more"/>
                     </div>
                 </div>
