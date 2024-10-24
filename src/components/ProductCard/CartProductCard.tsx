@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import TextButton from "@/components/Buttons/textButton";
 import { CartItem } from "@/types/CartItem";
 import Counter from "@/components/counter/Counter";
@@ -7,23 +6,25 @@ import Counter from "@/components/counter/Counter";
 interface CartProductCardProps {
     cartItem: CartItem;
     onRemove: () => void; // Функция для удаления товара
+    onUpdateCount: (newCount: number) => void; // Функция для обновления количества товара
 }
 
-const CartProductCard: React.FC<CartProductCardProps> = ({ cartItem, onRemove }) => {
-    const [count, setCount] = useState(cartItem.count);
+const CartProductCard: React.FC<CartProductCardProps> = ({ cartItem, onRemove, onUpdateCount }) => {
 
     const handleIncrement = () => {
-        setCount(prevCount => (prevCount < 10 ? prevCount + 1 : prevCount)); // Лимит на 10 единиц
+        const newCount = cartItem.count < 10 ? cartItem.count + 1 : cartItem.count;
+        onUpdateCount(newCount); // Передаем новое количество в родительский компонент
     };
 
     const handleDecrement = () => {
-        setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount)); // Минимум 1 единица
+        const newCount = cartItem.count > 1 ? cartItem.count - 1 : cartItem.count;
+        onUpdateCount(newCount); // Передаем новое количество в родительский компонент
     };
 
     return (
-        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+        <div className="gap-2.5 mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
             <div className="space-y-6">
-                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                <div className="ounded-lg border border-gray-200 bg-white p-4 shadow-sm mt-2 dark:border-gray-700 dark:bg-gray-800 md:p-6">
                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                         <a href="#" className="shrink-0 md:order-1">
                             <img className="h-20 w-20 dark:hidden" src={cartItem.imageUrl} alt="product image" />
@@ -33,14 +34,14 @@ const CartProductCard: React.FC<CartProductCardProps> = ({ cartItem, onRemove })
                         <label htmlFor="counter-input" className="sr-only">Choose quantity:</label>
                         <div className="flex items-center justify-between md:order-3 md:justify-end">
                             <Counter
-                                count={count}
+                                count={cartItem.count} // Используем count из пропсов
                                 onIncrement={handleIncrement}
                                 onDecrement={handleDecrement}
                                 min={1}
                                 max={10}
                             />
                             <div className="text-end md:order-4 md:w-32">
-                                <p className="text-base font-bold text-gray-900 dark:text-white">{cartItem.price}$</p>
+                                <p className="text-base font-bold text-gray-900 dark:text-white">{(cartItem.price * cartItem.count).toFixed(2)}$</p>
                             </div>
                         </div>
 
