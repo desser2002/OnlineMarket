@@ -2,9 +2,11 @@
 
 import { CartItem } from "@/types/CartItem";
 import CartProductCard from "@/components/ProductCard/CartProductCard";
-import { useState } from "react";
+import React, { useState } from "react";
 import OrderSummary from "@/components/OrderSummary/OrderSummary";
 import { OrderSummaryData } from "@/types/OrderSummaryData";
+import TextButton from "@/components/Buttons/textButton";
+import ArrowIcon from "@/components/icons/ArrowIcon";
 
 const initialCartItems: CartItem[] = [
     {
@@ -70,10 +72,26 @@ export default function Page() {
                             />
                         ))}
                     </div>
+                    <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
+                        <OrderSummary summary={orderSummaryData}/>
 
-                    <OrderSummary summary={orderSummaryData} />
+                        <a href="#"
+                           className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            Proceed to Checkout
+                        </a>
+
+                        <div className="flex items-center justify-center gap-2">
+                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">or</span>
+                            <TextButton
+                                text="Continue Shopping"
+                                textColor="text-primary-700"
+                                url="/products"
+                                rightIcon={<ArrowIcon/>}
+                            />
+                        </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
         </section>
-    );
+);
 }
