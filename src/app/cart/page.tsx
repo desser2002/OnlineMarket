@@ -58,7 +58,7 @@ export default function Page() {
 
     return (
         <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16 min-h-screen">
-            <div className="mx-auto max-h-screen-xl max-w-screen-xl px-4 2xl:px-0">
+            <div className="mx-auto  max-w-screen-xl px-4 2xl:px-0 min-h-screen">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
 
                 <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8 gap-2.5">
@@ -75,7 +75,7 @@ export default function Page() {
                     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
                         <OrderSummary summary={orderSummaryData}/>
 
-                        <a href="#"
+                        <a href="/payment"
                            className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                             Proceed to Checkout
                         </a>

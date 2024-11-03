@@ -10,6 +10,7 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import SortIcon from "@/components/icons/SortIcon";
 import SortDropdown from "@/components/DropDowns/SortDropDown";
 import FilterModal from "@/components/Modal/FilterModal";
+import CartIcon from "@/components/icons/CartIcon";
 
 const brands = ['Apple', 'Asus', 'Acer', 'Allview', 'Atari', 'AMD', 'Aruba', 'Beats'];
 
@@ -56,11 +57,15 @@ export default function Page() {
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
+    const navigateToCart = () => {
+        window.location.href = '/cart';
+    };
+
     const breadcrumbPaths = ['Home', 'Products', 'Electronics'];
     return (
         <div>
-            <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
-                <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+            <section className=" bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12min-h-screen">
+                <div className="min-h-screen mx-auto max-w-screen-xl px-4 2xl:px-0">
 
                     <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
                         <Breadcrumb paths={breadcrumbPaths}/>
@@ -77,6 +82,7 @@ export default function Page() {
                                 onClick={toggleModal}
                             />
 
+
                             {/* Модальное окно для фильтров, передаем список брендов */}
                             <FilterModal isVisible={isModalVisible} onClose={toggleModal} brands={brands}/>
 
@@ -87,7 +93,15 @@ export default function Page() {
                                 <SortDropdown isVisible={isSortDropdownVisible}/>
 
                             </div>
+                            <Button
+                                text="Cart"
+                                leftIcon={<CartIcon />}
+                                onClick={navigateToCart}
+                                className="cartButton"
+                            />
+
                             </div>
+
                         </div>
 
                         <div>
