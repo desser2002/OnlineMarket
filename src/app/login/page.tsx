@@ -1,10 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import React, {useState} from 'react';
-import {login} from "@/hooks/auth";
-  // Используем Link для навигации
-
+import React, { useState } from 'react';
+import { login } from "@/hooks/auth";
 
 export default function Page() {
     const router = useRouter();
@@ -19,16 +17,21 @@ export default function Page() {
 
         try {
             const data = await login(email, password); // Вызов функции
-            document.cookie = `token=${data.token}; path=/; HttpOnly`;
-            console.log(data.token)
+
+            // Сохраняем токен, email и id в cookies
+            document.cookie = `token=${data.token}; path=/; Secure`;
+            document.cookie = `email=${email}; path=/; Secure`;
+            document.cookie = `userid=${data.id}; path=/; Secure`; // Сохраняем ID пользователя
+
+            console.log('Token:', data.token);
+            console.log('Email:', email);
+            console.log('UserID:', data.id);
+
             router.push('/products'); // Редирект после успешного логина
         } catch (err: any) {
             setError(err.message);
         }
     };
-
-
-
 
     return (
         <section className="bg-dark:bg-gray-900">
@@ -52,7 +55,6 @@ export default function Page() {
                                     id="email"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="name@company.com"
-
                                 />
                             </div>
                             <div>
@@ -65,7 +67,7 @@ export default function Page() {
                                     id="password"
                                     placeholder="••••••••"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                       />
+                                />
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-start">

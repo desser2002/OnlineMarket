@@ -1,6 +1,8 @@
 // api/auth.ts
 
-export async function login(username: string, password: string): Promise<{ token: string }> {
+export async function login(username: string, password: string): Promise<{
+    id: string;
+    token: string }> {
     const response = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
         headers: {
