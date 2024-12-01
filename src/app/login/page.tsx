@@ -1,24 +1,34 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import React  from 'react';
+import React, {useState} from 'react';
+import {login} from "@/hooks/auth";
   // Используем Link для навигации
 
 
 export default function Page() {
     const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
 
+    const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
 
-    const handleSignIn = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();  // Предотвращаем перезагрузку страницы
-        // Логика для обработки формы (например, проверка данных)
-
-            // Переход на другую страницу после успешной отправки
-            router.push('/products');  // Укажите путь страницы для перехода
-
-
+        try {
+            const data = await login(email, password); // Вызов функции
+            document.cookie = `token=${data.token}; path=/; HttpOnly`;
+            console.log(data.token)
+            router.push('/products'); // Редирект после успешного логина
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
+
+
+
 
     return (
         <section className="bg-dark:bg-gray-900">
