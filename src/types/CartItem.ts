@@ -1,11 +1,13 @@
-
 export interface CartItem {
     id: number;
-    product_id: number;
-    price: number;
-    imageUrl?: string;
-    text: string;
-    discount?: number;
-    count: number;
+    amount: number;
+    product: {
+        id: number;
+        name: string;
+        price: number;
+        imageUrl: string;
+        discount?: string;
+        rating: number;
+        reviewCount: number;
+    };
 }
-
