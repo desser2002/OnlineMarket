@@ -2,19 +2,21 @@
 
 import React, { useEffect, useState } from 'react';
 
-import ProductCardList from '@/components/ProductCard/ProductCardList';
+import ProductCardList from "@/components/ProductCard/ProductCardList";
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import Button from '@/components/Buttons/Button';
 import FilterIcon from '@/components/icons/FilterIcon';
-import ChevronDownIcon from '@/components/icons/ChevronDownIcon';
-import SortIcon from '@/components/icons/SortIcon';
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import SortIcon from "@/components/icons/SortIcon";
 import SortDropdown from '@/components/DropDowns/SortDropDown';
-import FilterModal from '@/components/Modal/FilterModal';
+import FilterModal from "@/components/Modal/FilterModal";
 import CartIcon from '@/components/icons/CartIcon';
 
-import { Product } from "@/types/Product";
+
 import { fetchProducts } from "@/hooks/products";
 import UserDropdownMenu from "@/components/DropDowns/UserDropdown";
+import {Product} from "@/types/Product";
+
 
 const brands = ['Apple', 'Asus', 'Acer', 'Allview', 'Atari', 'AMD', 'Aruba', 'Beats'];
 

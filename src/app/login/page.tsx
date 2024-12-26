@@ -21,11 +21,11 @@ export default function Page() {
             // Сохраняем токен, email и id в cookies
             document.cookie = `token=${data.token}; path=/; Secure`;
             document.cookie = `email=${email}; path=/; Secure`;
-            document.cookie = `userid=${data.id}; path=/; Secure`; // Сохраняем ID пользователя
+            document.cookie = `userid=${data.userId}; path=/; Secure`; // Сохраняем ID пользователя
 
             console.log('Token:', data.token);
             console.log('Email:', email);
-            console.log('UserID:', data.id);
+            console.log('UserID:', data.userId);
 
             router.push('/products'); // Редирект после успешного логина
         } catch (err: any) {

@@ -1,7 +1,7 @@
 // api/auth.ts
 
 export async function login(username: string, password: string): Promise<{
-    id: string;
+    userId: string;
     token: string }> {
     const response = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
@@ -16,6 +16,7 @@ export async function login(username: string, password: string): Promise<{
     }
 
     const data = await response.json();
+    console.log(data);
     return data; // Возвращает токен
 }
 
