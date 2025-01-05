@@ -4,9 +4,10 @@ import OrderTypeFilterSelect from "@/app/order-overview/components/OrderTypeDrop
 import DurationDropDownFilter from "@/app/order-overview/components/DurationDropDownFilter";
 
 import { Order } from "@/types/Order";
-import {fetchOrdersForSeller} from "@/hooks/getSellerOrders";
+import { fetchOrdersForSeller } from "@/hooks/getSellerOrders";
+import { updateOrderStatus } from "@/hooks/useUpdateOrderStatus";
 import OrderList from "@/components/LIsts/OrderList";
-
+import ConfirmationModal from "@/components/windows/ConfirmationModal";
 
 
 export default function Page() {
@@ -15,6 +16,8 @@ export default function Page() {
     const [orders, setOrders] = useState<Order[]>([]); // Загруженные заказы
     const [isLoading, setIsLoading] = useState<boolean>(true); // Состояние загрузки
     const [error, setError] = useState<string | null>(null); // Состояние ошибки
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
     const handleOrderTypeChange = (type: string) => setSelectedOrderType(type);
     const handleDurationChange = (duration: string) => setSelectedDuration(duration);
@@ -37,7 +40,6 @@ export default function Page() {
 
     const startDate = getStartDateForDuration(selectedDuration);
 
-    // Загружаем заказы из API
     useEffect(() => {
         const sellerId = document.cookie
             .split('; ')
@@ -50,25 +52,56 @@ export default function Page() {
             return;
         }
 
-        setIsLoading(true); // Начало загрузки
+        setIsLoading(true);
         fetchOrdersForSeller(sellerId)
             .then(fetchedOrders => {
                 setOrders(fetchedOrders);
-                setIsLoading(false); // Успешное завершение загрузки
+                setIsLoading(false);
             })
             .catch(err => {
                 setError(err.message);
-                setIsLoading(false); // Ошибка загрузки
+                setIsLoading(false);
             });
     }, []);
 
-    // Фильтруем заказы
     const filteredOrders = orders.filter((order) => {
         const matchesType = selectedOrderType === 'All orders' || order.status === selectedOrderType;
         const orderDate = new Date(order.date);
         const matchesDuration = orderDate >= startDate;
         return matchesType && matchesDuration;
     });
+
+    const openModal = (orderId: string) => {
+        setCurrentOrderId(orderId);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setCurrentOrderId(null);
+    };
+
+    const closeOrder = async () => {
+        if (!currentOrderId) return;
+
+        try {
+            await updateOrderStatus(currentOrderId, 'Cancelled');
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === currentOrderId ? { ...order, status: 'Cancelled' } : order
+                )
+            );
+            closeModal();
+        } catch (error) {
+            // Проверяем, является ли ошибка объектом и имеет ли свойство message
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError('An unknown error occurred.');
+            }
+            closeModal();
+        }
+    };
 
     if (isLoading) {
         return <p className="text-center">Loading...</p>;
@@ -96,10 +129,18 @@ export default function Page() {
                     </div>
 
                     <div className="mt-6 flow-root sm:mt-8">
-                        <OrderList orders={filteredOrders} />
+                        <OrderList
+                            orders={filteredOrders}
+                            onCloseOrderClick={(orderId: string) => openModal(orderId)}
+                        />
                     </div>
                 </div>
             </div>
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                onConfirm={closeOrder}
+                onCancel={closeModal}
+            />
         </section>
     );
 }
