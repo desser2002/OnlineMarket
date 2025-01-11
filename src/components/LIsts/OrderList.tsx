@@ -1,9 +1,9 @@
-import {Order} from "@/types/Order";
+import { Order } from "@/types/Order";
 import React from "react";
-
 
 interface OrderListProps {
     orders: Order[];
+    onCloseOrderClick: (orderId: string) => void; // Функция для обработки отмены заказа
 }
 
 // Helper function to determine status style based on order status
@@ -22,8 +22,7 @@ function getStatusStyle(status: Order['status']): string {
     }
 }
 
-
-const OrderList: React.FC<OrderListProps> = ({ orders }) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, onCloseOrderClick }) => {
     return (
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {orders.map((order) => (
@@ -57,8 +56,11 @@ const OrderList: React.FC<OrderListProps> = ({ orders }) => {
                     </dl>
 
                     <div className="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
-                        <button type="button"
-                                className="w-full rounded-lg border border-red-700 px-3 py-2 text-center text-sm font-medium text-red-700 hover:bg-red-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-red-900 lg:w-auto">
+                        <button
+                            type="button"
+                            className="w-full rounded-lg border border-red-700 px-3 py-2 text-center text-sm font-medium text-red-700 hover:bg-red-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:border-red-500 dark:text-red-500 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-red-900 lg:w-auto"
+                            onClick={() => onCloseOrderClick(order.id)} // Обработка нажатия
+                        >
                             Cancel order
                         </button>
                         <a href="#"
@@ -73,4 +75,3 @@ const OrderList: React.FC<OrderListProps> = ({ orders }) => {
 };
 
 export default OrderList;
-
