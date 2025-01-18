@@ -1,5 +1,7 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
+// Импортируйте навигационную панель
 import OrderTypeFilterSelect from "@/app/order-overview/components/OrderTypeDropDownFilter";
 import DurationDropDownFilter from "@/app/order-overview/components/DurationDropDownFilter";
 
@@ -8,14 +10,14 @@ import { fetchOrdersForSeller } from "@/hooks/getSellerOrders";
 import { updateOrderStatus } from "@/hooks/useUpdateOrderStatus";
 import OrderList from "@/components/LIsts/OrderList";
 import ConfirmationModal from "@/components/windows/ConfirmationModal";
-
+import NavigationBar from "@/components/Navigationbar";
 
 export default function Page() {
     const [selectedOrderType, setSelectedOrderType] = useState<string>('All orders');
     const [selectedDuration, setSelectedDuration] = useState<string>('this week');
-    const [orders, setOrders] = useState<Order[]>([]); // Загруженные заказы
-    const [isLoading, setIsLoading] = useState<boolean>(true); // Состояние загрузки
-    const [error, setError] = useState<string | null>(null); // Состояние ошибки
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
@@ -93,7 +95,6 @@ export default function Page() {
             );
             closeModal();
         } catch (error) {
-            // Проверяем, является ли ошибка объектом и имеет ли свойство message
             if (error instanceof Error) {
                 setError(error.message);
             } else {
@@ -112,35 +113,38 @@ export default function Page() {
     }
 
     return (
-        <section className="bg-white min-h-screen py-8 antialiased dark:bg-gray-900 md:py-16">
-            <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                <div className="mx-auto max-w-5xl">
-                    <div className="gap-4 sm:flex sm:items-center sm:justify-between">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My orders</h2>
-                        <div className="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
-                            <div>
-                                <OrderTypeFilterSelect onChange={handleOrderTypeChange} />
-                            </div>
-                            <span className="inline-block text-gray-500 dark:text-gray-400"> from </span>
-                            <div>
-                                <DurationDropDownFilter onChange={handleDurationChange} />
+        <>
+            <NavigationBar /> {/* Добавлена навигационная панель */}
+            <section className="bg-white min-h-screen py-8 antialiased dark:bg-gray-900 md:py-16">
+                <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+                    <div className="mx-auto max-w-5xl">
+                        <div className="gap-4 sm:flex sm:items-center sm:justify-between">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My orders</h2>
+                            <div className="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
+                                <div>
+                                    <OrderTypeFilterSelect onChange={handleOrderTypeChange} />
+                                </div>
+                                <span className="inline-block text-gray-500 dark:text-gray-400"> from </span>
+                                <div>
+                                    <DurationDropDownFilter onChange={handleDurationChange} />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-6 flow-root sm:mt-8">
-                        <OrderList
-                            orders={filteredOrders}
-                            onCloseOrderClick={(orderId: string) => openModal(orderId)}
-                        />
+                        <div className="mt-6 flow-root sm:mt-8">
+                            <OrderList
+                                orders={filteredOrders}
+                                onCloseOrderClick={(orderId: string) => openModal(orderId)}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <ConfirmationModal
-                isOpen={isModalOpen}
-                onConfirm={closeOrder}
-                onCancel={closeModal}
-            />
-        </section>
+                <ConfirmationModal
+                    isOpen={isModalOpen}
+                    onConfirm={closeOrder}
+                    onCancel={closeModal}
+                />
+            </section>
+        </>
     );
 }

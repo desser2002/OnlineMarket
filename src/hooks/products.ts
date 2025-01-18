@@ -9,8 +9,6 @@ export async function fetchProducts(token: string): Promise<Product[]> {
         }
     });
 
-
-    // Проверяем статус ответа
     if (!response.ok) {
         try {
             const errorData = await response.json();
@@ -22,10 +20,13 @@ export async function fetchProducts(token: string): Promise<Product[]> {
 
     const data: Product[] = await response.json();
 
-    // Проверяем, что данные не пустые
     if (!data || data.length === 0) {
         throw new Error('No products found');
     }
 
-    return data; // Возвращаем массив продуктов
+    // Добавляем полный путь к изображению
+    return data.map(product => ({
+        ...product,
+        imageUrl: `http://localhost:8080/api/products/images/${product.imageUrl}`, // Подставляем URL для изображений
+    }));
 }

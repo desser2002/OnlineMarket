@@ -43,8 +43,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div className="h-56 w-full">
                 <a href="#">
-                    <img className="mx-auto h-full dark:hidden" src={product.imageUrl} alt={product.name} />
-                    <img className="mx-auto hidden h-full dark:block" src={product.imageUrl} alt={product.name} />
+                    <img className="mx-auto h-full w-full dark:hidden" src={product.imageUrl} alt={product.name} />
+                    <img className="mx-auto hidden h-full w-fulldark:block" src={product.imageUrl} alt={product.name} />
                 </a>
             </div>
             <div className="pt-6">

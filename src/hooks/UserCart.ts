@@ -6,14 +6,15 @@ export async function fetchUserCart(userId: number, token: string): Promise<Cart
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,   
         },
     });
+    console.log(response)
 
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to fetch cart items.");
     }
-
+console.log(response)
     return await response.json();
 }

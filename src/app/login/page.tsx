@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -16,20 +16,33 @@ export default function Page() {
         const password = formData.get('password') as string;
 
         try {
-            const data = await login(email, password); // Вызов функции
+            const data = await login(email, password); // Вызов функции логина
 
-            // Сохраняем токен, email и id в cookies
+            // Сохраняем токен, email, id и роль в cookies
             document.cookie = `token=${data.token}; path=/; Secure`;
             document.cookie = `email=${email}; path=/; Secure`;
-            document.cookie = `userid=${data.userId}; path=/; Secure`; // Сохраняем ID пользователя
+            document.cookie = `userid=${data.userId}; path=/; Secure`;
+            document.cookie = `role=${data.role}; path=/; Secure`; // Сохраняем роль пользователя
 
             console.log('Token:', data.token);
             console.log('Email:', email);
             console.log('UserID:', data.userId);
+            console.log('Role:', data.role);
 
-            router.push('/products'); // Редирект после успешного логина
-        } catch (err: any) {
-            setError(err.message);
+            // Перенаправляем в зависимости от роли
+            if (data.role === 'USER') {
+                router.push('/products');
+            } else if (data.role === 'SELLER') {
+                router.push('/order-overview');
+            } else {
+                throw new Error('Invalid user role');
+            }
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An unknown error occurred');
+            }
         }
     };
 
@@ -55,6 +68,7 @@ export default function Page() {
                                     id="email"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="name@company.com"
+                                    required
                                 />
                             </div>
                             <div>
@@ -67,6 +81,7 @@ export default function Page() {
                                     id="password"
                                     placeholder="••••••••"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    required
                                 />
                             </div>
                             <div className="flex items-center justify-between">
@@ -89,6 +104,7 @@ export default function Page() {
                                     Forgot password?
                                 </a>
                             </div>
+                            {error && <p className="text-sm text-red-500">{error}</p>}
                             <button
                                 type="submit"
                                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">

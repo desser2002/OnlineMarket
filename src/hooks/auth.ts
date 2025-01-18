@@ -2,7 +2,9 @@
 
 export async function login(username: string, password: string): Promise<{
     userId: string;
-    token: string }> {
+    token: string;
+    role: string; // Добавлено поле для роли
+}> {
     const response = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
         headers: {
@@ -16,21 +18,24 @@ export async function login(username: string, password: string): Promise<{
     }
 
     const data = await response.json();
-    console.log(data);
-    return data; // Возвращает токен
+    return {
+        userId: data.userId,
+        token: data.token,
+        role: data.role, // Получаем роль пользователя из ответа
+    };
 }
 
-// api/auth.ts
 
 
+export async function registerUser(username: string, password: string, isSeller: boolean): Promise<void> {
+    const role = isSeller ? "SELLER" : "USER";
 
-export async function registerUser(username: string, password: string): Promise<void> {
     const response = await fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, role }),
     });
 
     if (!response.ok) {

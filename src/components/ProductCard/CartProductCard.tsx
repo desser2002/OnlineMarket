@@ -10,7 +10,6 @@ interface CartProductCardProps {
 }
 
 const CartProductCard: React.FC<CartProductCardProps> = ({ cartItem, onRemove, onUpdateCount }) => {
-
     const handleIncrement = () => {
         const newCount = cartItem.amount < 10 ? cartItem.amount + 1 : cartItem.amount;
         onUpdateCount(newCount); // Передаем новое количество в родительский компонент
@@ -24,11 +23,20 @@ const CartProductCard: React.FC<CartProductCardProps> = ({ cartItem, onRemove, o
     return (
         <div className="gap-2.5 mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
             <div className="space-y-6">
-                <div className="ounded-lg border border-gray-200 bg-white p-4 shadow-sm mt-2 dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm mt-2 dark:border-gray-700 dark:bg-gray-800 md:p-6">
                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                         <a href="#" className="shrink-0 md:order-1">
-                            <img className="h-20 w-20 dark:hidden" src={cartItem.product.imageUrl} alt="product image" />
-                            <img className="hidden h-20 w-20 dark:block" src={cartItem.product.imageUrl} alt="product image" />
+                            {cartItem.product.imageUrl ? (
+                                <img
+                                    className="h-20 w-20"
+                                    src={`http://localhost:8080/api/products/images/${cartItem.product.imageUrl}`}
+                                    alt={cartItem.product.name}
+                                />
+                            ) : (
+                                <div className="h-20 w-20 flex items-center justify-center bg-gray-200">
+                                    <span className="text-gray-500">No Image</span>
+                                </div>
+                            )}
                         </a>
 
                         <label htmlFor="counter-input" className="sr-only">Choose quantity:</label>
