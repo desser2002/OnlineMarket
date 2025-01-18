@@ -7,5 +7,6 @@ export interface Product {
     reviewCount?: number;
     imageUrl: string;
     discount?: string;
+    description?: string;
 }
 

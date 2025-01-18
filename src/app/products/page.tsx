@@ -123,9 +123,9 @@ export default function Page() {
                             <ProductCardList products={products} />
                         )}
                     </div>
-                    <div className="flex justify-center mt-2.5">
-                        <Button text="Show more" />
-                    </div>
+                    {/*<div className="flex justify-center mt-2.5">*/}
+                    {/*    <Button text="Show more" />*/}
+                    {/*</div>*/}
                 </div>
             </section>
         </div>

@@ -7,8 +7,10 @@ import TextButton from "@/components/Buttons/textButton";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import { CartItem } from "@/types/CartItem";
 import { OrderSummaryData } from "@/types/OrderSummaryData";
-import {fetchUserCart} from "@/hooks/UserCart";
-
+import { fetchUserCart } from "@/hooks/UserCart";
+import {removeCartItem} from "@/hooks/useRemoveCartItem";
+import {updateCartItem} from "@/hooks/useUpdateCartItem";
+ // Импорт хуков для API
 
 const calculateOrderSummary = (cartItems: CartItem[]): OrderSummaryData => {
     const originalPrice = cartItems.reduce((sum, item) => sum + item.product.price * item.amount, 0);
@@ -55,23 +57,60 @@ export default function Page() {
             .finally(() => setLoading(false));
     }, []);
 
-    const handleRemoveItem = (productId: number) => {
-        setCartItems((prevItems) =>
-            prevItems.filter((item) => item.product.id !== productId) // Используем product.id
-        );
+    const handleRemoveItem = async (productId: number) => {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
+
+        const userId = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("userid="))
+            ?.split("=")[1];
+
+        if (!token || !userId) {
+            setError("Authorization token or user ID is missing.");
+            return;
+        }
+
+        try {
+            await removeCartItem(Number(userId), productId, token);
+            setCartItems((prevItems) => prevItems.filter((item) => item.product.id !== productId));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
+    const handleUpdateItemCount = async (productId: number, newCount: number) => {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
 
-    const handleUpdateItemCount = (productId: number, newCount: number) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.product.id === productId
-                    ? { ...item, amount: newCount } // Обновляем только количество
-                    : item
-            )
-        );
+        const userId = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("userid="))
+            ?.split("=")[1];
+
+        if (!token || !userId) {
+            setError("Authorization token or user ID is missing.");
+            return;
+        }
+
+        try {
+            await updateCartItem(Number(userId), productId, newCount, token);
+            setCartItems((prevItems) =>
+                prevItems.map((item) =>
+                    item.product.id === productId ? { ...item, amount: newCount } : item
+                )
+            );
+
+        } catch (err: any) {
+            setError(err.message);
+
+
+        }
     };
-
 
     const orderSummaryData = calculateOrderSummary(cartItems);
 
@@ -93,11 +132,10 @@ export default function Page() {
                         {cartItems.map((item) => (
                             <CartProductCard
                                 key={item.id}
-                                cartItem={item} // Передаем объект целиком
-                                onRemove={() => handleRemoveItem(item.product.id)} // Используем product.id
-                                onUpdateCount={(newCount) => handleUpdateItemCount(item.product.id, newCount)} // Use item.product.id
+                                cartItem={item}
+                                onRemove={() => handleRemoveItem(item.product.id)}
+                                onUpdateCount={(newCount) => handleUpdateItemCount(item.product.id, newCount)}
                             />
-
                         ))}
                     </div>
                     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">

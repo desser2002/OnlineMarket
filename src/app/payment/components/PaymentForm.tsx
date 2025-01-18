@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 type PaymentFormProps = {
-    onSubmit: () => void; // Проп onSubmit для передачи функции обработки оплаты
+    onSubmit: (formData: { fullName: string; cardNumber: string; expiration: string; cvv: string }) => void;
 };
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        cardNumber: '',
+        expiration: '',
+        cvv: '',
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({ ...prev, [id]: value }));
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault(); // Предотвращаем стандартное поведение формы
-        onSubmit(); // Вызываем функцию, переданную через пропсы
+        onSubmit(formData); // Передаём данные формы через onSubmit
     };
 
     return (
@@ -18,14 +30,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
             <div className="mb-6 grid grid-cols-2 gap-4">
                 <div className="col-span-2 sm:col-span-1">
                     <label
-                        htmlFor="full_name"
+                        htmlFor="fullName"
                         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                     >
                         Full name (as displayed on card)*
                     </label>
                     <input
                         type="text"
-                        id="full_name"
+                        id="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                         placeholder="Bonnie Green"
                         required
@@ -34,14 +48,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
 
                 <div className="col-span-2 sm:col-span-1">
                     <label
-                        htmlFor="card-number-input"
+                        htmlFor="cardNumber"
                         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                     >
                         Card number*
                     </label>
                     <input
                         type="text"
-                        id="card-number-input"
+                        id="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                         placeholder="xxxx-xxxx-xxxx-xxxx"
                         required
@@ -50,14 +66,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
 
                 <div>
                     <label
-                        htmlFor="card-expiration-input"
+                        htmlFor="expiration"
                         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                     >
                         Card expiration*
                     </label>
                     <input
                         type="text"
-                        id="card-expiration-input"
+                        id="expiration"
+                        value={formData.expiration}
+                        onChange={handleChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         placeholder="MM/YY"
                         required
@@ -65,14 +83,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit }) => {
                 </div>
                 <div>
                     <label
-                        htmlFor="cvv-input"
+                        htmlFor="cvv"
                         className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                     >
                         CVV*
                     </label>
                     <input
                         type="text"
-                        id="cvv-input"
+                        id="cvv"
+                        value={formData.cvv}
+                        onChange={handleChange}
                         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
                         placeholder="•••"
                         required
