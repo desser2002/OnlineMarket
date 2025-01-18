@@ -10,6 +10,8 @@ import { OrderSummaryData } from "@/types/OrderSummaryData";
 import { fetchUserCart } from "@/hooks/UserCart";
 import {removeCartItem} from "@/hooks/useRemoveCartItem";
 import {updateCartItem} from "@/hooks/useUpdateCartItem";
+import SellerNavigationbar from "@/components/SellerNavigationbar";
+import UserNavigationbar from "@/components/UserNavigationBar";
  // Импорт хуков для API
 
 const calculateOrderSummary = (cartItems: CartItem[]): OrderSummaryData => {
@@ -30,7 +32,7 @@ export default function Page() {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-
+    const [role, setRole] = useState<string | null>(null);
     useEffect(() => {
         const token = document.cookie
             .split("; ")
@@ -41,13 +43,14 @@ export default function Page() {
             .split("; ")
             .find((row) => row.startsWith("userid="))
             ?.split("=")[1];
+        const userRole = document.cookie.split('; ').find(row => row.startsWith('role='))?.split('=')[1] || null;
 
         if (!token || !userId) {
             setError("Authorization token or user ID is missing.");
             setLoading(false);
             return;
         }
-
+        setRole(userRole);
         fetchUserCart(Number(userId), token)
             .then((data) => {
                 setCartItems(data);
@@ -114,16 +117,16 @@ export default function Page() {
 
     const orderSummaryData = calculateOrderSummary(cartItems);
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
 
     if (error) {
         return <p className="text-red-500">{error}</p>;
     }
 
     return (
+        <div>
+        {role === 'SELLER' ? <SellerNavigationbar /> : <UserNavigationbar />}
         <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16 min-h-screen">
+
             <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 min-h-screen">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Shopping Cart</h2>
 
@@ -161,5 +164,6 @@ export default function Page() {
                 </div>
             </div>
         </section>
+        </div>
     );
 }

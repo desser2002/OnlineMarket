@@ -8,6 +8,8 @@ import PaymentSuccessCard from "@/components/Payments/PaymentSuccessCard";
 import { CartItem } from "@/types/CartItem";
 import { fetchUserCart } from "@/hooks/UserCart";
 import { processPayment } from "@/hooks/useProcessPayment";
+import SellerNavigationbar from "@/components/SellerNavigationbar";
+import UserNavigationbar from "@/components/UserNavigationBar";
 
 export default function Page() {
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -23,6 +25,7 @@ export default function Page() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [processing, setProcessing] = useState<boolean>(false);
+    const [role, setRole] = useState<string | null>(null);
 
     useEffect(() => {
         const token = document.cookie
@@ -34,6 +37,8 @@ export default function Page() {
             .split("; ")
             .find((row) => row.startsWith("userid="))
             ?.split("=")[1];
+        const userRole = document.cookie.split('; ').find(row => row.startsWith('role='))?.split('=')[1] || null;
+        setRole(userRole);
 
         if (!token || !userId) {
             setError("Authorization token or user ID is missing.");
@@ -108,6 +113,7 @@ export default function Page() {
 
     return (
         <div>
+            {role === 'SELLER' ? <SellerNavigationbar /> : <UserNavigationbar />}
             <section className="bg-white py-8 min-h-screen antialiased dark:bg-gray-900 md:py-16">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
                     <div className="mx-auto max-w-5xl">

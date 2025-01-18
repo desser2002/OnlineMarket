@@ -2,12 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { useProduct } from "@/hooks/sendfile";
-import NavigationBar from "@/components/Navigationbar";
+import SellerNavigationbar from "@/components/SellerNavigationbar";
+import { fetchCategories } from "@/hooks/fetchCategories";
+import {Category} from "@/types/Category";
+
 
 export default function Page() {
     const [productName, setProductName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
+    const [categoryId, setCategoryId] = useState('');
+    const [categories, setCategories] = useState<Category[]>([]);
     const [image, setImage] = useState<File | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
@@ -16,18 +21,25 @@ export default function Page() {
         const tokenFromCookies = document.cookie
             .split('; ')
             .find((row) => row.startsWith('token='))
-            ?.split('=')[1];
+            ?.split('=')[1] || null; // If token is not found, assign null
 
         const usernameFromCookies = document.cookie
             .split('; ')
             .find((row) => row.startsWith('email='))
-            ?.split('=')[1];
+            ?.split('=')[1] || null; // Similarly for username
 
-        setToken(tokenFromCookies || null);
-        setUsername(usernameFromCookies || null);
+        setToken(tokenFromCookies);
+        setUsername(usernameFromCookies);
 
         if (!tokenFromCookies || !usernameFromCookies) {
             alert('Authorization token or username is missing.');
+        }
+
+        // Fetch categories from the backend
+        if (tokenFromCookies) {
+            fetchCategories(tokenFromCookies)
+                .then((data: Category[]) => setCategories(data))
+                .catch((err) => console.error("Failed to fetch categories:", err));
         }
     }, []);
 
@@ -39,6 +51,7 @@ export default function Page() {
         if (!image) missingFields.push('Image');
         if (!productName) missingFields.push('Product Name');
         if (!price) missingFields.push('Price');
+        if (!categoryId) missingFields.push('Category');
         if (!token) missingFields.push('Authorization Token');
         if (!username) missingFields.push('Username');
 
@@ -51,9 +64,15 @@ export default function Page() {
             name: productName,
             price: parseFloat(price),
             description: description || "",
+            categoryId: parseInt(categoryId, 10),
         };
 
-        const result = await saveProductWithImage(image, product);
+        try {
+            await saveProductWithImage(image, product);
+            alert("Product saved successfully!");
+        } catch (err) {
+            console.error("Failed to save product:", err);
+        }
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,9 +83,7 @@ export default function Page() {
 
     return (
         <div className="h-screen flex flex-col overflow-hidden">
-            {/* Навигационная панель фиксирована сверху */}
-            <NavigationBar />
-            {/* Контент занимает оставшееся пространство */}
+            <SellerNavigationbar />
             <div className="flex-grow bg-gray-100 flex flex-col items-center overflow-hidden">
                 {isLoading && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -125,7 +142,6 @@ export default function Page() {
                                     onChange={(e) => setProductName(e.target.value)}
                                     className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-lg font-bold text-gray-800"
                                 />
-
                             </div>
                             <div className="mb-2">
                                 <label className="block text-sm font-medium text-gray-700">Price ($)</label>
@@ -136,13 +152,28 @@ export default function Page() {
                                     className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-lg text-gray-800 font-semibold"
                                 />
                             </div>
+                            <div className="mb-2">
+                                <label className="block text-sm font-medium text-gray-700">Category</label>
+                                <select
+                                    value={categoryId}
+                                    onChange={(e) => setCategoryId(e.target.value)}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                >
+                                    <option value="" disabled>Select a category</option>
+                                    {categories.map((category) => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                             <div className="flex-grow">
                                 <label className="block text-sm font-medium text-gray-700">Description</label>
                                 <textarea
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700 resize-none"
-                                    style={{height: "calc(100% - 30px)"}} // Высота на 30px меньше
+                                    style={{ height: "calc(100% - 30px)" }}
                                 ></textarea>
                             </div>
                         </div>

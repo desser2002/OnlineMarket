@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 export const useProduct = (token: string, username: string) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -32,12 +32,13 @@ export const useProduct = (token: string, username: string) => {
         }
     };
 
-    // Создание продукта
+    // Создание продукта с категорией
     const createProduct = async (product: {
         name: string;
         price: number;
         description?: string;
         imageUrl: string;
+        categoryId: number; // Added categoryId here
     }) => {
         try {
             const response = await fetch("http://localhost:8080/api/products/new", {
@@ -52,6 +53,7 @@ export const useProduct = (token: string, username: string) => {
                     username: username,
                     description: product.description || "",
                     imageUrl: product.imageUrl, // Передаем только имя файла
+                    categoryId: product.categoryId, // Pass categoryId here
                 }),
             });
 
@@ -73,7 +75,7 @@ export const useProduct = (token: string, username: string) => {
     // Основной метод для загрузки файла и создания продукта
     const saveProductWithImage = async (
         file: File | null,
-        product: { name: string; price: number; description?: string }
+        product: { name: string; price: number; description?: string; categoryId: number } // categoryId added here
     ) => {
         setIsLoading(true); // Включаем индикатор загрузки
         try {

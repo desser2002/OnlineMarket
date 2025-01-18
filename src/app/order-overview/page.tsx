@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-// Импортируйте навигационную панель
 import OrderTypeFilterSelect from "@/app/order-overview/components/OrderTypeDropDownFilter";
 import DurationDropDownFilter from "@/app/order-overview/components/DurationDropDownFilter";
 
@@ -10,16 +9,16 @@ import { fetchOrdersForSeller } from "@/hooks/getSellerOrders";
 import { updateOrderStatus } from "@/hooks/useUpdateOrderStatus";
 import OrderList from "@/components/LIsts/OrderList";
 import ConfirmationModal from "@/components/windows/ConfirmationModal";
-import NavigationBar from "@/components/Navigationbar";
+import SellerNavigationbar from "@/components/SellerNavigationbar";
 
 export default function Page() {
     const [selectedOrderType, setSelectedOrderType] = useState<string>('All orders');
     const [selectedDuration, setSelectedDuration] = useState<string>('this week');
     const [orders, setOrders] = useState<Order[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);  // Добавим состояние для загрузки
 
     const handleOrderTypeChange = (type: string) => setSelectedOrderType(type);
     const handleDurationChange = (duration: string) => setSelectedDuration(duration);
@@ -46,19 +45,19 @@ export default function Page() {
         const sellerId = document.cookie
             .split('; ')
             .find(row => row.startsWith('userid='))
-            ?.split('=')[1];
+            ?.split('=')[1] || null; // Используем null, если значение не найдено
 
         if (!sellerId) {
-            setError("Seller ID is missing.");
+            setError("User ID not found in cookies.");
             setIsLoading(false);
             return;
         }
 
-        setIsLoading(true);
+        // Загружаем заказы с бэкенда
         fetchOrdersForSeller(sellerId)
             .then(fetchedOrders => {
                 setOrders(fetchedOrders);
-                setIsLoading(false);
+                setIsLoading(false);  // Завершаем загрузку
             })
             .catch(err => {
                 setError(err.message);
@@ -104,9 +103,7 @@ export default function Page() {
         }
     };
 
-    if (isLoading) {
-        return <p className="text-center">Loading...</p>;
-    }
+
 
     if (error) {
         return <p className="text-red-500 text-center">{error}</p>;
@@ -114,7 +111,7 @@ export default function Page() {
 
     return (
         <>
-            <NavigationBar /> {/* Добавлена навигационная панель */}
+            <SellerNavigationbar />
             <section className="bg-white min-h-screen py-8 antialiased dark:bg-gray-900 md:py-16">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
                     <div className="mx-auto max-w-5xl">
